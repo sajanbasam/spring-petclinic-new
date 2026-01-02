@@ -1,14 +1,48 @@
 ---
+
+name: CI for springpet clinic
+
 name: manual ci for maven-release
+
 on:
     pull_request:
         branches:
             - main
+
+    workflow_dispatch:
+permissions:
+    contents: read
+    pull-requests: write
+    checks: write
+
+
 jobs:
     manual:
         runs-on: ububtu-latest
         steps:
             - uses: actions/checkout@v5
+
+            - uses: actions/setup-java@v3
+              with:
+                  distribution: 'temurin'
+                  java-version: '21'
+                  cache: 'maven'
+            - name: Build with Maven
+              run: mvn clean package
+            - name: publish  test results
+              uses: EnricoMi/publish-unit-test-result-action@v2
+              with:
+                  files: |
+                    **/target/surefire-reports/*.xml
+            - name: uploading  packaged jar file
+              uses: actions/upload-artifact@v3
+              with:
+                name: springpetclinic-jar
+                path: "**/target/*.jar"
+            - name: code analysis with codeql
+              uses: github/codeql-action/analyze@v2
+              with:
+                category: "/language:java"
             - uses: actions/setup-java@v5
               with:
                   distribution: 'temurin'
@@ -17,3 +51,4 @@ jobs:
               run: mvn clan package
             
             
+
