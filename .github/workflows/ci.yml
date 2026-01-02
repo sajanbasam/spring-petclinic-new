@@ -2,7 +2,7 @@
 
 name: CI for springpet clinic
 
-name: manual ci for maven-release
+
 
 on:
     pull_request:
