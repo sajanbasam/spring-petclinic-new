@@ -17,7 +17,7 @@ permissions:
 
 
 jobs:
-    manual:
+    manual-ci:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v5
@@ -40,15 +40,12 @@ jobs:
                 name: springpetclinic-jar
                 path: "**/target/*.jar"
             - name: code analysis with codeql
-              uses: github/codeql-action/analyze@v2
+              uses:  github/codeql-action/init@v3
               with:
                 category: "/language:java"
-            - uses: actions/setup-java@v5
-              with:
-                  distribution: 'temurin'
-                  java-version: '21'
-            - name: Build with Maven
-              run: mvn clan package
+            - uses: github/codeql-action/analyze@v3
+             
+            
             
             
 
